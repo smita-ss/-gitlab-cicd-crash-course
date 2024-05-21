@@ -19,3 +19,14 @@ run_tests2:
 
 
 
+build_image:
+  stage: build
+  script:
+    - echo "Running make build..."
+
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Running make deploy..."
+
