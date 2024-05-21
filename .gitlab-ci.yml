@@ -7,3 +7,15 @@ run_tests:
   script:
     - echo "Running make test..."
 
+
+run_tests2:
+  stage: test
+  image: python:3.9-slim-buster
+  before_script:
+    - echo "Updating package lists2..."
+    
+  script:
+    - echo "Running make test2..."
+
+
+
