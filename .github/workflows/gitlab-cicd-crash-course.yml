@@ -22,8 +22,10 @@ jobs:
       image: python:3.9-slim-buster
     timeout-minutes: 60
     steps:
-    - name: Install git
-      run: apt-get update && apt-get install -y git
+    - name: Install git and git-lfs
+      run: |
+        apt-get update && apt-get install -y git git-lfs
+        git lfs install
     - uses: actions/checkout@v4.1.0
       with:
         fetch-depth: 20
@@ -37,8 +39,10 @@ jobs:
       image: python:3.9-slim-buster
     timeout-minutes: 60
     steps:
-    - name: Install git
-      run: apt-get update && apt-get install -y git
+    - name: Install git and git-lfs
+      run: |
+        apt-get update && apt-get install -y git git-lfs
+        git lfs install
     - uses: actions/checkout@v4.1.0
       with:
         fetch-depth: 20
