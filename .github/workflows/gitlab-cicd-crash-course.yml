@@ -22,6 +22,8 @@ jobs:
       image: python:3.9-slim-buster
     timeout-minutes: 60
     steps:
+    - name: Install git
+      run: apt-get update && apt-get install -y git
     - uses: actions/checkout@v4.1.0
       with:
         fetch-depth: 20
@@ -35,6 +37,8 @@ jobs:
       image: python:3.9-slim-buster
     timeout-minutes: 60
     steps:
+    - name: Install git
+      run: apt-get update && apt-get install -y git
     - uses: actions/checkout@v4.1.0
       with:
         fetch-depth: 20
