@@ -1,20 +1,22 @@
 name: new-group-actions/gitlab-cicd-crash-course
+
 on:
-  push:
   workflow_dispatch:
 concurrency:
   group: "${{ github.ref }}"
   cancel-in-progress: true
+
 jobs:
   build_image:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-    - uses: actions/checkout@v4.1.0
-      with:
-        fetch-depth: 20
-        lfs: true
-    - run: echo "Running make build..."
+      - uses: actions/checkout@v4.1.0
+        with:
+          fetch-depth: 20
+          lfs: true
+      - run: echo "Running make build..."
+
   run_tests:
     needs: build_image
     runs-on: ubuntu-latest
@@ -22,42 +24,46 @@ jobs:
       image: python:3.9-slim-buster
     timeout-minutes: 60
     steps:
-    - name: Install git and git-lfs
-      run: |
-        apt-get update && apt-get install -y git git-lfs
-        git lfs install
-    - uses: actions/checkout@v4.1.0
-      with:
-        fetch-depth: 20
-        lfs: true
-    - run: echo "Updating package lists..."
-    - run: echo "Running make test..."
+      - name: Install git and git-lfs
+        run: |
+          apt-get update && apt-get install -y git git-lfs
+          git lfs install
+      - uses: actions/checkout@v4.1.0
+        with:
+          fetch-depth: 20
+          lfs: true
+      - run: echo "Updating package lists..."
+      - run: echo "Running make test..."
+
   run_tests2:
-    needs: build_image
     runs-on: ubuntu-latest
     container:
       image: python:3.9-slim-buster
     timeout-minutes: 60
     steps:
-    - name: Install git and git-lfs
-      run: |
-        apt-get update && apt-get install -y git git-lfs
-        git lfs install
-    - uses: actions/checkout@v4.1.0
-      with:
-        fetch-depth: 20
-        lfs: true
-    - run: echo "Updating package lists2..."
-    - run: echo "Running make test2..."
+      - name: Manual Trigger
+        if: github.event_name == 'workflow_dispatch'
+        run: echo "This job can be triggered manually."
+      - name: Install git and git-lfs
+        run: |
+          apt-get update && apt-get install -y git git-lfs
+          git lfs install
+      - uses: actions/checkout@v4.1.0
+        with:
+          fetch-depth: 20
+          lfs: true
+      - run: echo "Updating package lists2..."
+      - run: echo "Running make test2..."
+
   deploy:
     needs:
-    - run_tests
-    - run_tests2
+      - run_tests
+      - run_tests2
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-    - uses: actions/checkout@v4.1.0
-      with:
-        fetch-depth: 20
-        lfs: true
-    - run: echo "Running make deploy..."
+      - uses: actions/checkout@v4.1.0
+        with:
+          fetch-depth: 20
+          lfs: true
+      - run: echo "Running make deploy..."
