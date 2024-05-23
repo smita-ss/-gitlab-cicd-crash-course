@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build
-        run: echo "Building..."
+        run: echo "Bufttilding..."
 
   test:
     runs-on: ubuntu-latest
