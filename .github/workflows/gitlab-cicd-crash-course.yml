@@ -1,69 +1,34 @@
-name: new-group-actions/gitlab-cicd-crash-course
+name: My Workflow
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
-concurrency:
-  group: "${{ github.ref }}"
-  cancel-in-progress: true
 
 jobs:
-  build_image:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4.1.0
-        with:
-          fetch-depth: 20
-          lfs: true
-      - run: echo "Running make build..."
+      - name: Build
+        run: echo "Building..."
 
-  run_tests:
-    needs: build_image
+  test:
     runs-on: ubuntu-latest
-    container:
-      image: python:3.9-slim-buster
-    timeout-minutes: 60
     steps:
-      - name: Install git and git-lfs
-        run: |
-          apt-get update && apt-get install -y git git-lfs
-          git lfs install
-      - uses: actions/checkout@v4.1.0
-        with:
-          fetch-depth: 20
-          lfs: true
-      - run: echo "Updating package lists..."
-      - run: echo "Running make test..."
+      - name: Test
+        run: echo "Testing..."
 
-  run_tests2:
+  test2:
     runs-on: ubuntu-latest
-    container:
-      image: python:3.9-slim-buster
-    timeout-minutes: 60
+    if: github.event_name == 'workflow_dispatch'
     steps:
-      - name: Manual Trigger
-        if: github.event_name == 'workflow_dispatch'
-        run: echo "This job can be triggered manually."
-      - name: Install git and git-lfs
-        run: |
-          apt-get update && apt-get install -y git git-lfs
-          git lfs install
-      - uses: actions/checkout@v4.1.0
-        with:
-          fetch-depth: 20
-          lfs: true
-      - run: echo "Updating package lists2..."
-      - run: echo "Running make test2..."
+      - name: Test 2
+        run: echo "Testing 2..."
 
   deploy:
-    needs:
-      - run_tests
-      - run_tests2
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    needs: [test, test2]
     steps:
-      - uses: actions/checkout@v4.1.0
-        with:
-          fetch-depth: 20
-          lfs: true
-      - run: echo "Running make deploy..."
+      - name: Deploy
+        run: echo "Deploying..."
